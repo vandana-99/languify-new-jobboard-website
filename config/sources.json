@@ -1,0 +1,20 @@
+{
+  "limitPerSource": 40,
+  "sources": [
+    { "provider": "greenhouse", "board": "groww", "company": "Groww" },
+    { "provider": "lever", "board": "cred", "company": "CRED" },
+    { "provider": "greenhouse", "board": "stripe", "company": "Stripe" },
+    { "provider": "greenhouse", "board": "mongodb", "company": "MongoDB" },
+    { "provider": "greenhouse", "board": "rubrik", "company": "Rubrik" },
+    { "provider": "greenhouse", "board": "zscaler", "company": "Zscaler" },
+    { "provider": "greenhouse", "board": "databricks", "company": "Databricks" },
+    { "provider": "greenhouse", "board": "gitlab", "company": "GitLab" },
+    { "provider": "greenhouse", "board": "okta", "company": "Okta" },
+    { "provider": "greenhouse", "board": "figma", "company": "Figma" },
+    { "provider": "greenhouse", "board": "airbnb", "company": "Airbnb" },
+    { "provider": "greenhouse", "board": "coinbase", "company": "Coinbase" },
+    { "provider": "greenhouse", "board": "thoughtworks", "company": "Thoughtworks" },
+    { "provider": "greenhouse", "board": "twilio", "company": "Twilio" },
+    { "provider": "greenhouse", "board": "guidepoint", "company": "Guidepoint" }
+  ]
+}
