@@ -1,0 +1,9 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.env*
+*.log
+.DS_Store
+Thumbs.db
+public/jobs.json.tmp
