@@ -1,0 +1,56 @@
+name: Update employer jobs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 4,16 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: employer-job-collection
+  cancel-in-progress: false
+
+jobs:
+  collect-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Test feed handling
+        run: npm test
+
+      - name: Collect public employer feeds
+        run: npm run collect
+
+      - name: Validate snapshot
+        run: npm run check:feed
+
+      - name: Commit snapshot to this repository
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/jobs.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh public employer jobs'
+            git push
+          fi
+
+      - name: Request the separate Cloudflare Pages deployment
+        env:
+          CLOUDFLARE_DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: node scripts/request-deploy.mjs
+
+      - name: Flag complete source outage
+        run: node --experimental-strip-types scripts/check-feed.mjs --require-success
