@@ -1,4 +1,4 @@
-name: Update employer jobs
+name: Update job listings
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   collect-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: write
 
@@ -28,10 +28,29 @@ jobs:
         with:
           node-version: '22'
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-jobs.txt
+
+      - name: Install platform collector
+        id: platform-dependencies
+        continue-on-error: true
+        run: python -m pip install -r requirements-jobs.txt
+
       - name: Test feed handling
         run: npm test
 
-      - name: Collect public employer feeds
+      - name: Test collection failure handling
+        run: python -m unittest discover -s tests -p '*_test.py'
+
+      - name: Collect LinkedIn and Naukri
+        if: steps.platform-dependencies.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/collect-job-boards.py
+
+      - name: Collect employer feeds and merge job sources
         run: npm run collect
 
       - name: Validate snapshot
@@ -43,7 +62,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add public/jobs.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Refresh public employer jobs'
+            git commit -m 'Refresh job listings'
             git push
           fi
 
@@ -52,5 +71,5 @@ jobs:
           CLOUDFLARE_DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
         run: node scripts/request-deploy.mjs
 
-      - name: Flag complete source outage
-        run: node --experimental-strip-types scripts/check-feed.mjs --require-success
+      - name: Check source health after requesting publication
+        run: node --experimental-strip-types scripts/check-feed.mjs --require-success --require-platforms
