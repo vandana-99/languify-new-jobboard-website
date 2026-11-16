@@ -10,7 +10,7 @@ export type Job = {
   url: string; listingUrl: string; source: string; sourceId: string; demo: false;
 };
 export type SourceStatus = {
-  id: string; company: string; provider: "greenhouse" | "lever";
+  id: string; company: string; provider: "greenhouse" | "lever" | "linkedin" | "naukri";
   status: "ok" | "error"; checkedAt: string; lastSuccessAt: string | null;
   total: number; matches: number; published: number; truncated: boolean; error: string | null;
 };
@@ -89,7 +89,7 @@ export function parseFeed(value: unknown): JobFeed {
   }
   const sourceIds = new Set<string>();
   for (const source of feed.sources) {
-    if (!source || !["ok", "error"].includes(source.status) || !["greenhouse", "lever"].includes(source.provider)
+    if (!source || !["ok", "error"].includes(source.status) || !["greenhouse", "lever", "linkedin", "naukri"].includes(source.provider)
       || !source.id || sourceIds.has(source.id) || typeof source.company !== "string" || !absoluteDate(source.checkedAt)
       || (source.lastSuccessAt !== null && !absoluteDate(source.lastSuccessAt))
       || ![source.total, source.matches, source.published].every(n => Number.isInteger(n) && n >= 0)
