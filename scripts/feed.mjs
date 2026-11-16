@@ -1,6 +1,6 @@
 import { absoluteDate, plainText, safeUrl, parseFeed, isJobRetained } from '../lib/jobs.ts';
 
-const INDIA = /\bindia\b|\bbengaluru\b|\bbangalore\b|\bmumbai\b|\bhyderabad\b|\bpune\b|\bgurugram\b|\bgurgaon\b|\bnoida\b|\bchennai\b|\bdelhi\b|\bkolkata\b|\bahmedabad\b|\bjaipur\b|\bkochi\b|\bcoimbatore\b|\bchandigarh\b|\bindore\b/i;
+export const INDIA = /\bindia\b|\bbengaluru\b|\bbangalore\b|\bmumbai\b|\bhyderabad\b|\bpune\b|\bgurugram\b|\bgurgaon\b|\bnoida\b|\bchennai\b|\bdelhi\b|\bkolkata\b|\bahmedabad\b|\bjaipur\b|\bkochi\b|\bcoimbatore\b|\bchandigarh\b|\bindore\b/i;
 const SALES = /\bsales\b|\bpre[- ]?sales\b|business development|account (executive|manager)|\b[bs]dr\b|customer success|recruit|talent acquisition/i;
 
 export function classifyRole(title, department = '') {
@@ -29,7 +29,7 @@ export function validateConfig(config) {
   return config;
 }
 
-function employmentType(title, value) {
+export function employmentType(title, value) {
   if (/intern/i.test(title + ' ' + value)) return 'Internship';
   if (/part[ -]?time/i.test(value)) return 'Part-time';
   if (/contract|freelance|temporary/i.test(value)) return 'Contract';
