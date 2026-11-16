@@ -7,3 +7,7 @@ out/
 .DS_Store
 Thumbs.db
 public/jobs.json.tmp
+.job-board-results.json
+.job-board-results.tmp
+__pycache__/
+.venv/
